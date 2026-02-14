@@ -12,25 +12,13 @@
     <h1>Lunaristra</h1>
 
     <div class="moon-container">
-        <svg width="200" height="200" viewBox="0 0 200 200">
+        <svg id="moonSVG" width="220" height="220" viewBox="0 0 220 220">
 
-            <defs>
-                <mask id="moonMask">
-                    <rect width="200" height="200" fill="white"/>
-                    <circle id="maskCircle"
-                            cx="100"
-                            cy="100"
-                            r="90"
-                            fill="black"/>
-                </mask>
-            </defs>
+            <!-- Dark base moon -->
+            <circle cx="110" cy="110" r="95" fill="#1c1f26"/>
 
-            <!-- Base Moon -->
-            <circle cx="100"
-                    cy="100"
-                    r="90"
-                    fill="white"
-                    mask="url(#moonMask)"/>
+            <!-- Illuminated crescent -->
+            <path id="illuminationPath" fill="white"/>
 
         </svg>
     </div>
@@ -43,7 +31,12 @@
         <p id="set"></p>
     </div>
 </div>
+
+<!-- Load API key FIRST -->
 <script src="assets/js/config.js"></script>
+
+<!-- Then main logic -->
 <script src="assets/js/script.js"></script>
+
 </body>
 </html>
