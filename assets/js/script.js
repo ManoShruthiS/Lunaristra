@@ -1,5 +1,6 @@
 const apiKey = "2780974096844eb3b3d121544261402";
 
+// Calculate lunar age manually
 function calculateLunarAge() {
     const today = new Date();
     const knownNewMoon = new Date("2000-01-06T18:14:00");
@@ -17,28 +18,52 @@ function fetchMoonData(lat, lon) {
         .then(data => {
             const astro = data.astronomy.astro;
             const lunarAge = calculateLunarAge();
+            const illumination = parseFloat(astro.moon_illumination);
 
-            document.getElementById("output").innerHTML = `
-                <p>Phase: ${astro.moon_phase}</p>
-                <p>Illumination: ${astro.moon_illumination}%</p>
-                <p>Lunar Age: ${lunarAge} days</p>
-                <p>Moonrise: ${astro.moonrise}</p>
-                <p>Moonset: ${astro.moonset}</p>
-            `;
+            // Update text fields
+            document.getElementById("phase").innerText =
+                "Phase: " + astro.moon_phase;
+
+            document.getElementById("illumination").innerText =
+                "Illumination: " + illumination + "%";
+
+            document.getElementById("age").innerText =
+                "Lunar Age: " + lunarAge + " days";
+
+            document.getElementById("rise").innerText =
+                "Moonrise: " + astro.moonrise;
+
+            document.getElementById("set").innerText =
+                "Moonset: " + astro.moonset;
+
+            //  Visual Moon Rendering
+            const shadow = document.getElementById("shadow");
+
+            // Convert illumination to movement
+            const percentage = illumination / 100;
+
+            // Move shadow across moon
+            shadow.style.transform =
+                `translateX(${percentage * 180 - 90}px)`;
         })
         .catch(error => {
-            document.getElementById("output").innerText =
-                "Error fetching lunar data.";
-            console.error(error);
+            console.error("Error fetching lunar data:", error);
         });
 }
 
+// Get user location
 if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-        fetchMoonData(position.coords.latitude, position.coords.longitude);
-    }, () => {
-        fetchMoonData("Chennai");
-    });
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            fetchMoonData(
+                position.coords.latitude,
+                position.coords.longitude
+            );
+        },
+        () => {
+            fetchMoonData("Chennai");
+        }
+    );
 } else {
     fetchMoonData("Chennai");
 }

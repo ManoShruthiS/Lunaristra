@@ -1,7 +1,49 @@
 body {
-    background-color: #0b0f1a;
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at 30% 30%, #141a33, #05070d);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
     color: white;
-    font-family: Arial, sans-serif;
+}
+
+.container {
     text-align: center;
-    margin-top: 100px;
+}
+
+h1 {
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+}
+
+.moon-container {
+    margin-bottom: 30px;
+}
+
+.moon {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffffff, #dcdcdc);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(255,255,255,0.3);
+}
+
+.shadow {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: #05070d;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+    transition: transform 1s ease;
+}
+
+.info p {
+    margin: 5px 0;
+    opacity: 0.9;
 }
