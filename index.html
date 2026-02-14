@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lunaristra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -12,9 +12,27 @@
     <h1>Lunaristra</h1>
 
     <div class="moon-container">
-        <div class="moon">
-            <div class="shadow" id="shadow"></div>
-        </div>
+        <svg width="200" height="200" viewBox="0 0 200 200">
+
+            <defs>
+                <mask id="moonMask">
+                    <rect width="200" height="200" fill="white"/>
+                    <circle id="maskCircle"
+                            cx="100"
+                            cy="100"
+                            r="90"
+                            fill="black"/>
+                </mask>
+            </defs>
+
+            <!-- Base Moon -->
+            <circle cx="100"
+                    cy="100"
+                    r="90"
+                    fill="white"
+                    mask="url(#moonMask)"/>
+
+        </svg>
     </div>
 
     <div class="info">

@@ -22,25 +22,8 @@ h1 {
     margin-bottom: 30px;
 }
 
-.moon {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffffff, #dcdcdc);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 40px rgba(255,255,255,0.3);
-}
-
-.shadow {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: #05070d;
-    border-radius: 50%;
-    left: 0;
-    top: 0;
-    transition: transform 1s ease;
+svg {
+    filter: drop-shadow(0 0 30px rgba(255,255,255,0.4));
 }
 
 .info p {

@@ -1,26 +1,46 @@
 const apiKey = "2780974096844eb3b3d121544261402";
 
-// Calculate lunar age manually
+// -------------------------------------------
+// Calculate lunar age
+// -------------------------------------------
 function calculateLunarAge() {
+
     const today = new Date();
     const knownNewMoon = new Date("2000-01-06T18:14:00");
     const synodicMonth = 29.53058867;
 
-    const daysSince = (today - knownNewMoon) / (1000 * 60 * 60 * 24);
+    const daysSince =
+        (today - knownNewMoon) / (1000 * 60 * 60 * 24);
+
     return (daysSince % synodicMonth).toFixed(1);
 }
 
-function fetchMoonData(lat, lon) {
-    const today = new Date().toISOString().split("T")[0];
 
-    fetch(`https://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=${lat},${lon}&dt=${today}`)
+// -------------------------------------------
+// Fetch data from WeatherAPI
+// -------------------------------------------
+function fetchMoonData(lat, lon) {
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+    fetch(
+        `https://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=${lat},${lon}&dt=${today}`
+    )
         .then(response => response.json())
         .then(data => {
-            const astro = data.astronomy.astro;
-            const lunarAge = calculateLunarAge();
-            const illumination = parseFloat(astro.moon_illumination);
 
-            // Update text fields
+            const astro = data.astronomy.astro;
+
+            const lunarAge =
+                calculateLunarAge();
+
+            const illumination =
+                parseFloat(astro.moon_illumination);
+
+            // -------------------------------
+            // Update text info
+            // -------------------------------
             document.getElementById("phase").innerText =
                 "Phase: " + astro.moon_phase;
 
@@ -36,34 +56,77 @@ function fetchMoonData(lat, lon) {
             document.getElementById("set").innerText =
                 "Moonset: " + astro.moonset;
 
-            //  Visual Moon Rendering
-            const shadow = document.getElementById("shadow");
 
-            // Convert illumination to movement
-            const percentage = illumination / 100;
+            // -------------------------------
+            // Accurate Crescent Rendering
+            // -------------------------------
+            const maskCircle =
+                document.getElementById("maskCircle");
 
-            // Move shadow across moon
-            shadow.style.transform =
-                `translateX(${percentage * 180 - 90}px)`;
+            const illuminationFraction =
+                illumination / 100;
+
+            const lunarAgeValue =
+                parseFloat(lunarAge);
+
+            const synodicMonth =
+                29.53058867;
+
+            const isWaxing =
+                lunarAgeValue <= synodicMonth / 2;
+
+            const radius = 90;
+
+            // Circle overlap math
+            const offset =
+                radius * 2 * illuminationFraction;
+
+            if (isWaxing) {
+
+                maskCircle.setAttribute(
+                    "cx",
+                    100 + (radius - offset)
+                );
+
+            } else {
+
+                maskCircle.setAttribute(
+                    "cx",
+                    100 - (radius - offset)
+                );
+            }
+
         })
         .catch(error => {
-            console.error("Error fetching lunar data:", error);
+            console.error(
+                "Error fetching lunar data:",
+                error
+            );
         });
 }
 
+
+// -------------------------------------------
 // Get user location
+// -------------------------------------------
 if (navigator.geolocation) {
+
     navigator.geolocation.getCurrentPosition(
+
         position => {
             fetchMoonData(
                 position.coords.latitude,
                 position.coords.longitude
             );
         },
+
         () => {
             fetchMoonData("Chennai");
         }
+
     );
+
 } else {
+
     fetchMoonData("Chennai");
 }
