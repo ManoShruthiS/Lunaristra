@@ -12,13 +12,14 @@
     <h1>Lunaristra</h1>
 
     <div class="moon-container">
-        <svg id="moonSVG" width="220" height="220" viewBox="0 0 220 220">
+        <svg width="220" height="220" viewBox="0 0 220 220">
 
-            <!-- Dark base moon -->
-            <circle cx="110" cy="110" r="95" fill="#1c1f26"/>
+            <!-- Dark base -->
+            <circle cx="110" cy="110" r="95" fill="white"/>
 
-            <!-- Illuminated crescent -->
-            <path id="illuminationPath" fill="white"/>
+            <!-- Light part -->
+            <path id="illuminationPath" fill="#1c1f26"/>
+
 
         </svg>
     </div>
@@ -32,10 +33,7 @@
     </div>
 </div>
 
-<!-- Load API key FIRST -->
 <script src="assets/js/config.js"></script>
-
-<!-- Then main logic -->
 <script src="assets/js/script.js"></script>
 
 </body>

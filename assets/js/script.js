@@ -1,17 +1,19 @@
-// ======================================
-// Lunaristra - Stable Crescent Rendering
-// ======================================
+// ================================
+// Lunaristra - Correct Crescent Rendering
+// ================================
 
 const synodicMonth = 29.53058867;
 const radius = 95;
 const center = 110;
 
 
+// --------------------------------
 // Calculate lunar age
+// --------------------------------
 function calculateLunarAge() {
 
     const today = new Date();
-    const knownNewMoon = new Date("2000-01-06T18:14:00");
+    const knownNewMoon = new Date("2000-01-06T18:14:00Z");
 
     const daysSince =
         (today - knownNewMoon) / (1000 * 60 * 60 * 24);
@@ -20,28 +22,30 @@ function calculateLunarAge() {
 }
 
 
-// Draw illuminated portion
-function drawMoon(lunarAge) {
+// --------------------------------
+// Draw moon using correct geometry
+// --------------------------------
+function drawMoon(illuminationFraction, lunarAge) {
 
     const path = document.getElementById("illuminationPath");
 
-    const phaseAngle =
-        (2 * Math.PI * lunarAge) / synodicMonth;
-
-    const k = (1 - Math.cos(phaseAngle)) / 2;
-
-    const x = radius * (1 - 2 * k);
+    const r = radius;
+    const c = center;
 
     const isWaxing =
         lunarAge <= synodicMonth / 2;
 
-    const sweepFlag =
-        isWaxing ? 1 : 0;
+    // Correct mathematical offset
+    const offset =
+        r * (1 - 2 * illuminationFraction);
+
+    const x =
+        isWaxing ? offset : -offset;
 
     const d = `
-        M ${center} ${center - radius}
-        A ${radius} ${radius} 0 1 1 ${center} ${center + radius}
-        A ${Math.abs(x)} ${radius} 0 1 ${sweepFlag} ${center} ${center - radius}
+        M ${c} ${c - r}
+        A ${r} ${r} 0 1 1 ${c} ${c + r}
+        A ${Math.abs(x)} ${r} 0 1 1 ${c} ${c - r}
         Z
     `;
 
@@ -49,15 +53,15 @@ function drawMoon(lunarAge) {
 }
 
 
-// Fetch API data
+// --------------------------------
+// Fetch moon data
+// --------------------------------
 function fetchMoonData(lat, lon) {
 
     const today =
         new Date().toISOString().split("T")[0];
 
-    fetch(
-        `https://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=${lat},${lon}&dt=${today}`
-    )
+    fetch(`https://api.weatherapi.com/v1/astronomy.json?key=${apiKey}&q=${lat},${lon}&dt=${today}`)
         .then(res => res.json())
         .then(data => {
 
@@ -67,6 +71,9 @@ function fetchMoonData(lat, lon) {
 
             const illumination =
                 parseFloat(astro.moon_illumination);
+
+            const illuminationFraction =
+                illumination / 100;
 
             document.getElementById("phase").innerText =
                 "Phase: " + astro.moon_phase;
@@ -83,7 +90,7 @@ function fetchMoonData(lat, lon) {
             document.getElementById("set").innerText =
                 "Moonset: " + astro.moonset;
 
-            drawMoon(lunarAge);
+            drawMoon(illuminationFraction, lunarAge);
 
         })
         .catch(err =>
@@ -92,7 +99,9 @@ function fetchMoonData(lat, lon) {
 }
 
 
+// --------------------------------
 // Get user location
+// --------------------------------
 if (navigator.geolocation) {
 
     navigator.geolocation.getCurrentPosition(
